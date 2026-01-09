@@ -1,36 +1,44 @@
 package com.example.URLshortner.Controller;
 
-import org.springframework.web.bind.annotation.RestController;
 import com.example.URLshortner.Service.UrlService;
+import com.example.URLshortner.dto.ShortenRequest;
+import com.example.URLshortner.dto.BulkShortenRequest;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
+@RequestMapping("/api")
 public class UrlController {
+
     private final UrlService urlService;
 
-    public UrlController(UrlService urlService){
+    public UrlController(UrlService urlService) {
         this.urlService = urlService;
     }
-
-    @PostMapping("/shorten")
-    public ResponseEntity<String> createShortUrl(@RequestParam String originalUrl){
-
-        if(originalUrl == null || originalUrl.isEmpty()){
-            return ResponseEntity.badRequest().body("Original URL is required");
-        }
-
-        String shortCode = urlService.createShortUrl(originalUrl);
-        String shortUrl = "https://localhost:8080/" + shortCode;
-
-        return ResponseEntity.ok(shortUrl);
+    @GetMapping("/")
+    public String home() {
+        return "URL Shortener Backend is running!";
     }
 
-    @GetMapping("/{shortCode}")
-    public ResponseEntity<Void> redirectToOriginalUrl(@PathVariable String shortCode){
-        
-            String originalUrl = urlService.getOriginalUrl(shortCode);
-            return ResponseEntity.status(302).header("Location", originalUrl).build();
-       
+
+
+    @PostMapping("/shorten")
+    public ResponseEntity<String> shortenUrl(@RequestBody ShortenRequest request) {
+        String shortCode = urlService.createShortUrl(request.getOriginalUrl());
+        return ResponseEntity.ok(shortCode);
+    }
+
+
+    @PostMapping("/shorten/bulk")
+    public ResponseEntity<Map<String, String>> bulkShorten(
+            @RequestBody BulkShortenRequest request) {
+
+        Map<String, String> result =
+                urlService.createBulkShortUrls(request.getUrls());
+
+        return ResponseEntity.ok(result);
     }
 }
