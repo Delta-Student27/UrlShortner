@@ -4,12 +4,49 @@ import org.springframework.stereotype.Service;
 import com.example.URLshortner.model.UrlMapping;
 import com.example.URLshortner.repository.UrlRepository;
 
+import java.net.HttpURLConnection;
 import java.time.LocalDateTime;
+import java.net.URI;
+import java.net.URL;
 import java.util.*;
 
 @Service
 public class UrlService {
+    // syntax check
+    public boolean isValidUrl(String url) {
+        try {
+            URI uri = new URI(url);
+            if (uri.getScheme() == null || (!uri.getScheme().equals("http") && !uri.getScheme().equals("https"))) {
+                return false;
+            }
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+    // Check if URL really exists
+    public boolean isUrlReachable(String urlStr) {
+        try {
+            
+            URI uri = new URI(urlStr);
+            if (uri.getScheme() == null || (!uri.getScheme().equals("http") && !uri.getScheme().equals("https"))) {
+                return false;
+            }
 
+            
+            URL url = uri.toURL();
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("HEAD");
+            conn.setConnectTimeout(3000);
+            conn.setReadTimeout(3000);
+
+            int code = conn.getResponseCode();
+            return code >= 200 && code < 400;
+
+        } catch (Exception e) {
+            return false;
+        }
+    }
     private final UrlRepository urlRepository;
 
     public UrlService(UrlRepository urlRepository) {
@@ -33,6 +70,14 @@ public class UrlService {
         Map<String, String> result = new HashMap<>();
 
         for (String url : urls) {
+            if (!isValidUrl(url)) {
+                result.put(url, "Invalid URL ❌");  // syntax error
+                continue;
+            }
+            if (!isUrlReachable(url)) {
+                result.put(url, "URL unreachable ❌");  // syntax ok but cannot reach
+                continue;
+            }
             String shortCode = createShortUrl(url);
             result.put(url, shortCode);
         }

@@ -7,6 +7,7 @@ import com.example.URLshortner.dto.BulkShortenRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -27,6 +28,12 @@ public class UrlController {
 
     @PostMapping("/shorten")
     public ResponseEntity<String> shortenUrl(@RequestBody ShortenRequest request) {
+        if (!urlService.isValidUrl(request.getOriginalUrl())) {
+            return ResponseEntity.badRequest().body("Invalid URL ❌");
+        }
+        if (!urlService.isUrlReachable(request.getOriginalUrl())) {
+            return ResponseEntity.badRequest().body("URL unreachable ❌");
+        }
         String shortCode = urlService.createShortUrl(request.getOriginalUrl());
         return ResponseEntity.ok(shortCode);
     }
@@ -36,8 +43,22 @@ public class UrlController {
     public ResponseEntity<Map<String, String>> bulkShorten(
             @RequestBody BulkShortenRequest request) {
 
-        Map<String, String> result =
-                urlService.createBulkShortUrls(request.getUrls());
+        Map<String, String> result = new HashMap<>();
+        for (String url : request.getUrls()) {
+
+            if (!urlService.isValidUrl(url)) {
+                result.put(url, "Invalid URL ❌");
+                continue;
+            }
+
+            if (!urlService.isUrlReachable(url)) {
+                result.put(url, "URL unreachable ❌");
+                continue;
+            }
+
+            String shortCode = urlService.createShortUrl(url);
+            result.put(url, shortCode);
+        }
 
         return ResponseEntity.ok(result);
     }
