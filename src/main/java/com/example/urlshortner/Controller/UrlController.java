@@ -12,6 +12,7 @@ import java.util.Map;
 @CrossOrigin(origins = "http://localhost:3000") // ⭐ IMPORTANT
 @RestController
 @RequestMapping("/api")
+@CrossOrigin(origins = "https://url-shortner-jn6au5p84-rutuja-adhikar-patils-projects.vercel.app/")
 public class UrlController {
 
     private final UrlService urlService;
