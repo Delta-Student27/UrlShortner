@@ -1,4 +1,4 @@
-package com.example.URLshortner.dto;
+package com.example.urlshortner.dto;
 
 public class ShortenRequest {
     private String originalUrl;

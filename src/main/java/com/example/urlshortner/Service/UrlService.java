@@ -1,8 +1,8 @@
-package com.example.URLshortner.Service;
+package com.example.urlshortner.Service;
 
 import org.springframework.stereotype.Service;
-import com.example.URLshortner.model.UrlMapping;
-import com.example.URLshortner.repository.UrlRepository;
+import com.example.urlshortner.model.UrlMapping;
+import com.example.urlshortner.repository.UrlRepository;
 
 import java.net.HttpURLConnection;
 import java.time.LocalDateTime;

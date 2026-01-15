@@ -1,15 +1,15 @@
-package com.example.URLshortner.Controller;
+package com.example.urlshortner.Controller;
 
-import com.example.URLshortner.Service.UrlService;
-import com.example.URLshortner.dto.ShortenRequest;
-import com.example.URLshortner.dto.BulkShortenRequest;
-
+import com.example.urlshortner.Service.UrlService;
+import com.example.urlshortner.dto.ShortenRequest;
+import com.example.urlshortner.dto.BulkShortenRequest;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.Map;
 
+@CrossOrigin(origins = "http://localhost:3000") // ⭐ IMPORTANT
 @RestController
 @RequestMapping("/api")
 public class UrlController {
@@ -19,12 +19,11 @@ public class UrlController {
     public UrlController(UrlService urlService) {
         this.urlService = urlService;
     }
+
     @GetMapping("/")
     public String home() {
         return "URL Shortener Backend is running!";
     }
-
-
 
     @PostMapping("/shorten")
     public ResponseEntity<String> shortenUrl(@RequestBody ShortenRequest request) {
@@ -37,7 +36,6 @@ public class UrlController {
         String shortCode = urlService.createShortUrl(request.getOriginalUrl());
         return ResponseEntity.ok(shortCode);
     }
-
 
     @PostMapping("/shorten/bulk")
     public ResponseEntity<Map<String, String>> bulkShorten(

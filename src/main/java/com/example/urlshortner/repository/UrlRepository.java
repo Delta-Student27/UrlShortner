@@ -1,6 +1,6 @@
-package com.example.URLshortner.repository;
+package com.example.urlshortner.repository;
 import org.springframework.data.jpa.repository.JpaRepository;
-import com.example.URLshortner.model.UrlMapping;
+import com.example.urlshortner.model.UrlMapping;
 
 import java.util.Optional;
 
