@@ -69,6 +69,7 @@
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 
+<<<<<<< HEAD
 			<!-- Skip tests during build -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -79,6 +80,16 @@
 				</configuration>
 			</plugin>
 
+=======
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>3.0.0</version>
+				<configuration>
+					<skipTests>true</skipTests>
+				</configuration>
+        	</plugin>
+>>>>>>> f70d2aab45a388cec8a515208026450ea12bd225
 		</plugins>
 	</build>
 

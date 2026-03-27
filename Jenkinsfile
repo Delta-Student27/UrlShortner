@@ -1,4 +1,5 @@
 pipeline {
+
 agent any
 
 ```
@@ -35,9 +36,31 @@ stages {
                 passwordVariable: 'Jayhind@1508'
             )]) {
                 bat 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+
+    agent any
+
+    tools {
+        jdk 'JDK21'
+        maven '3.9.12'
+    }
+
+    stages {
+
+        stage('Build') {
+            steps {
+                echo "Building branch: ${env.BRANCH_NAME}"
+                bat 'mvn clean package -DskipTests'
+            }
+        }
+
+        stage('Test') {
+            steps {
+                bat 'mvn test'
+
             }
         }
     }
+
 
     stage('Push Docker Image') {
         steps {
@@ -71,4 +94,14 @@ post {
     }
 }
 ```
+}
+
+    post {
+        success {
+            echo "✅ Build successful for ${env.BRANCH_NAME}"
+        }
+        failure {
+            echo "❌ Build failed for ${env.BRANCH_NAME}"
+        }
+    }
 }
