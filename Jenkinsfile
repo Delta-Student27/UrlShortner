@@ -12,7 +12,7 @@ stages {
 
     stage('Clone Repository') {
         steps {
-            git branch: 'master', url: 'https://github.com/Rutuja-ap/UrlShortner_.git'
+            git branch: 'master', url: 'https://github.com/Delta-Student27/UrlShortner.git'
         }
     }
 
